@@ -1,0 +1,137 @@
+{% extends 'mantenimiento/base.html' %}
+
+{% block title %}Agregar Mantenimiento - ACME Trans{% endblock %}
+
+{% block page_title %}
+{% if vehiculo %}
+Nuevo Mantenimiento para {{ vehiculo.placa }}
+{% else %}
+Agregar Nuevo Mantenimiento
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">
+          <i class="fas fa-wrench"></i> Registrar Nuevo Mantenimiento
+          {% if vehiculo %}
+          para {{ vehiculo.marca }} {{ vehiculo.modelo }} - {{ vehiculo.placa }}
+          {% endif %}
+        </h5>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="{{ form.vehiculo.id_for_label }}" class="form-label">{{ form.vehiculo.label }}</label>
+              {{ form.vehiculo }}
+              {% if form.vehiculo.errors %}
+              <div class="text-danger small">{{ form.vehiculo.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <label for="{{ form.tipo.id_for_label }}" class="form-label">{{ form.tipo.label }}</label>
+              {{ form.tipo }}
+              {% if form.tipo.errors %}
+              <div class="text-danger small">{{ form.tipo.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="{{ form.fecha.id_for_label }}" class="form-label">{{ form.fecha.label }}</label>
+              {{ form.fecha }}
+              {% if form.fecha.errors %}
+              <div class="text-danger small">{{ form.fecha.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <label for="{{ form.kilometraje_actual.id_for_label }}" class="form-label">{{
+                form.kilometraje_actual.label }}</label>
+              {{ form.kilometraje_actual }}
+              {% if form.kilometraje_actual.errors %}
+              <div class="text-danger small">{{ form.kilometraje_actual.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.descripcion.id_for_label }}" class="form-label">{{ form.descripcion.label }}</label>
+            {{ form.descripcion }}
+            {% if form.descripcion.errors %}
+            <div class="text-danger small">{{ form.descripcion.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="{{ form.taller.id_for_label }}" class="form-label">{{ form.taller.label }}</label>
+              {{ form.taller }}
+              {% if form.taller.errors %}
+              <div class="text-danger small">{{ form.taller.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <label for="{{ form.costo.id_for_label }}" class="form-label">{{ form.costo.label }}</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                {{ form.costo }}
+              </div>
+              {% if form.costo.errors %}
+              <div class="text-danger small">{{ form.costo.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              {{ form.completado }}
+              <label class="form-check-label" for="{{ form.completado.id_for_label }}">
+                {{ form.completado.label }}
+              </label>
+            </div>
+            {% if form.completado.errors %}
+            <div class="text-danger small">{{ form.completado.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="d-flex justify-content-between">
+            {% if vehiculo %}
+            <a href="{% url 'mantenimiento:detalle_vehiculo' vehiculo.id %}" class="btn btn-secondary">
+              <i class="fas fa-arrow-left"></i> Cancelar
+            </a>
+            {% else %}
+            <a href="{% url 'mantenimiento:lista_mantenimientos' %}" class="btn btn-secondary">
+              <i class="fas fa-arrow-left"></i> Cancelar
+            </a>
+            {% endif %}
+            <button type="submit" class="btn btn-success">
+              <i class="fas fa-save"></i> Registrar Mantenimiento
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle"></i>
+      <strong>Tipos de mantenimiento:</strong>
+      <ul class="mb-0 mt-2">
+        <li><strong>Preventivo:</strong> Mantenimientos programados para prevenir fallas</li>
+        <li><strong>Correctivo:</strong> Reparaciones de problemas existentes</li>
+        <li><strong>Emergencia:</strong> Reparaciones urgentes e imprevistas</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

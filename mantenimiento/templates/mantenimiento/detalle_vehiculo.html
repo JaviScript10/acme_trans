@@ -1,0 +1,150 @@
+{% extends 'mantenimiento/base.html' %}
+
+{% block title %}{{ vehiculo.placa }} - ACME Trans{% endblock %}
+
+{% block page_title %}Detalle del Vehículo: {{ vehiculo.placa }}{% endblock %}
+
+{% block content %}
+<!-- Información del vehículo -->
+<div class="row mb-4">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h5><i class="fas fa-car"></i> Información del Vehículo</h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-borderless">
+          <tr>
+            <td><strong>Placa:</strong></td>
+            <td>{{ vehiculo.placa }}</td>
+          </tr>
+          <tr>
+            <td><strong>Marca:</strong></td>
+            <td>{{ vehiculo.marca }}</td>
+          </tr>
+          <tr>
+            <td><strong>Modelo:</strong></td>
+            <td>{{ vehiculo.modelo }}</td>
+          </tr>
+          <tr>
+            <td><strong>Año:</strong></td>
+            <td>{{ vehiculo.año }}</td>
+          </tr>
+          <tr>
+            <td><strong>Kilometraje:</strong></td>
+            <td>{{ vehiculo.kilometraje|floatformat:0 }} km</td>
+          </tr>
+          <tr>
+            <td><strong>Fecha de registro:</strong></td>
+            <td>{{ vehiculo.fecha_registro|date:"d/m/Y" }}</td>
+          </tr>
+        </table>
+        <div class="mt-3">
+          <a href="{% url 'mantenimiento:editar_vehiculo' vehiculo.id %}" class="btn btn-primary">
+            <i class="fas fa-edit"></i> Editar Vehículo
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card bg-primary text-white">
+      <div class="card-body text-center">
+        <h3>{{ mantenimientos.count }}</h3>
+        <p>Total Mantenimientos</p>
+      </div>
+    </div>
+    <div class="card bg-success text-white mt-3">
+      <div class="card-body text-center">
+        <h3>${{ costo_total|default:0|floatformat:0 }}</h3>
+        <p>Costo Total</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Historial de mantenimientos -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <h5><i class="fas fa-history"></i> Historial de Mantenimientos</h5>
+        <a href="{% url 'mantenimiento:agregar_mantenimiento_vehiculo' vehiculo.id %}" class="btn btn-success btn-sm">
+          <i class="fas fa-plus"></i> Nuevo Mantenimiento
+        </a>
+      </div>
+      <div class="card-body">
+        {% if mantenimientos %}
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Descripción</th>
+                <th>Taller</th>
+                <th>Costo</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for mantenimiento in mantenimientos %}
+              <tr>
+                <td>{{ mantenimiento.fecha|date:"d/m/Y" }}</td>
+                <td>
+                  {% if mantenimiento.tipo == 'preventivo' %}
+                  <span class="badge bg-info">Preventivo</span>
+                  {% elif mantenimiento.tipo == 'correctivo' %}
+                  <span class="badge bg-warning">Correctivo</span>
+                  {% else %}
+                  <span class="badge bg-danger">Emergencia</span>
+                  {% endif %}
+                </td>
+                <td>{{ mantenimiento.descripcion }}</td>
+                <td>{{ mantenimiento.taller }}</td>
+                <td><strong>${{ mantenimiento.costo|floatformat:0 }}</strong></td>
+                <td>
+                  {% if mantenimiento.completado %}
+                  <span class="badge bg-success">Completado</span>
+                  {% else %}
+                  <span class="badge bg-warning">Pendiente</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <a href="{% url 'mantenimiento:editar_mantenimiento' mantenimiento.id %}"
+                    class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+          <i class="fas fa-wrench fa-3x text-muted mb-3"></i>
+          <h5>No hay mantenimientos registrados</h5>
+          <a href="{% url 'mantenimiento:agregar_mantenimiento_vehiculo' vehiculo.id %}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Agregar Primer Mantenimiento
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Botones de navegación -->
+<div class="row mt-4">
+  <div class="col-12">
+    <a href="{% url 'mantenimiento:lista_vehiculos' %}" class="btn btn-secondary">
+      <i class="fas fa-arrow-left"></i> Volver a Vehículos
+    </a>
+    <a href="{% url 'mantenimiento:dashboard' %}" class="btn btn-outline-primary">
+      <i class="fas fa-home"></i> Centro de Control
+    </a>
+  </div>
+</div>
+{% endblock %}

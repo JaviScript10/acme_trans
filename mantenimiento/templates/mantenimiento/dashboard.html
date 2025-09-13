@@ -1,0 +1,134 @@
+{% extends 'mantenimiento/base.html' %}
+
+{% block title %}Centro de Control - ACME Trans{% endblock %}
+
+{% block page_title %}Centro de Control - Resumen del Sistema{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card text-white bg-primary">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-4">
+            <i class="fas fa-car fa-3x"></i>
+          </div>
+          <div class="col-8 text-end">
+            <h2>{{ total_vehiculos }}</h2>
+            <h5>Total Vehículos</h5>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="{% url 'mantenimiento:lista_vehiculos' %}" class="text-white text-decoration-none">
+          Ver todos <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card text-white bg-warning">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-4">
+            <i class="fas fa-clock fa-3x"></i>
+          </div>
+          <div class="col-8 text-end">
+            <h2>{{ mantenimientos_pendientes }}</h2>
+            <h5>Pendientes</h5>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="{% url 'mantenimiento:lista_mantenimientos' %}?estado=pendientes"
+          class="text-white text-decoration-none">
+          Ver pendientes <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card text-white bg-success">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-4">
+            <i class="fas fa-check-circle fa-3x"></i>
+          </div>
+          <div class="col-8 text-end">
+            <h2>{{ mantenimientos_completados }}</h2>
+            <h5>Completados</h5>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="{% url 'mantenimiento:lista_mantenimientos' %}?estado=completados"
+          class="text-white text-decoration-none">
+          Ver completados <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0">
+          <i class="fas fa-info-circle"></i> Bienvenido al Sistema de Mantenimiento ACME Trans
+        </h5>
+      </div>
+      <div class="card-body">
+        <p class="card-text">
+          Este sistema te permite gestionar de manera eficiente el mantenimiento de toda la flota de vehículos.
+        </p>
+        <h6>Funcionalidades principales:</h6>
+        <ul>
+          <li><strong>Gestión de Vehículos:</strong> Registra y administra información de todos los vehículos</li>
+          <li><strong>Control de Mantenimientos:</strong> Programa y rastrea mantenimientos preventivos y correctivos</li>
+          <li><strong>Seguimiento de Costos:</strong> Controla los gastos asociados a cada mantenimiento</li>
+          <li><strong>Reportes:</strong> Visualiza estadísticas y reportes del estado de la flota</li>
+        </ul>
+
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="d-grid">
+              <a href="{% url 'mantenimiento:lista_vehiculos' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-car"></i> Gestionar Vehículos
+              </a>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="d-grid">
+              <a href="{% url 'mantenimiento:lista_mantenimientos' %}" class="btn btn-success btn-lg">
+                <i class="fas fa-wrench"></i> Ver Mantenimientos
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if mantenimientos_pendientes > 0 %}
+<div class="row mt-4">
+  <div class="col-md-12">
+    <div class="alert alert-warning" role="alert">
+      <h5 class="alert-heading">
+        <i class="fas fa-exclamation-triangle"></i> Atención
+      </h5>
+      <p>Tienes <strong>{{ mantenimientos_pendientes }}</strong> mantenimiento(s) pendiente(s) por completar.</p>
+      <hr>
+      <p class="mb-0">
+        <a href="{% url 'mantenimiento:lista_mantenimientos' %}?estado=pendientes" class="alert-link">
+          Revisar mantenimientos pendientes
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
